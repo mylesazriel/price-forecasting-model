@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import scipy.stats as si
 
-# Black Scholes Function
+# Black Scholes Call Function
 # --------------------------------------------------
 sigma = 0.2  # "Just use a proxy for volatility as I have to calculate that first using my methodology."
 
