@@ -32,7 +32,7 @@ def black_scholes_call_div(spxclose, strike, ttm, r, q, sigma):
 # Reading and prepping the data
 # --------------------------------------------------
 data = pd.read_csv('blackscholes_dataset.csv')
-data = data[data.ttm != 0]
+data = data[data.ttm != 0]  # Removes all the rows with missing data
 
 # Applying the model on every
 # row on the dataframe
