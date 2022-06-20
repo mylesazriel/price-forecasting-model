@@ -1,48 +1,42 @@
+# Importing libraries
+# --------------------------------------------------
 import pandas as pd
 import numpy as np
 import scipy.stats as si
 
+# Black Scholes Function
+# --------------------------------------------------
+sigma = 0.2  # "Just use a proxy for volatility as I have to calculate that first using my methodology."
 
-def black_scholes_call_div(S, K, T, r, q, sigma):
-    # S: spot price
-    # K: strike price
-    # T: time to maturity
+
+def black_scholes_call_div(spxclose, strike, ttm, r, q, sigma):
+
+    # spxclose: spot price
+    # strike: strike price
+    # ttm: time to maturity
     # r: interest rate
     # q: rate of continuous dividend paying asset
     # sigma: volatility of underlying asset
 
-    d1 = (np.log(S / K) + (r - q + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
-    d2 = (np.log(S / K) + (r - q - 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+    d1 = (np.log(spxclose / strike) + (r - q + 0.5 *
+          sigma ** 2) * ttm) / (sigma * np.sqrt(ttm))
+    d2 = (np.log(spxclose / strike) + (r - q - 0.5 *
+          sigma ** 2) * ttm) / (sigma * np.sqrt(ttm))
 
-    call = (S * np.exp(-q * T) * si.norm.cdf(d1, 0.0, 1.0) -
-            K * np.exp(-r * T) * si.norm.cdf(d2, 0.0, 1.0))
+    call = (spxclose * np.exp(-q * ttm) * si.norm.cdf(d1, 0.0, 1.0) -
+            strike * np.exp(-r * ttm) * si.norm.cdf(d2, 0.0, 1.0))
 
-    return call
+    print(call)
 
 
-### Reading and formatting .csv
+# Reading and prepping the data
+# --------------------------------------------------
 data = pd.read_csv('blackscholes_dataset.csv')
 data = data[data.ttm != 0]
-data.head()
 
-# Trying to figure out how to step the function
-# through every row in the dataset
-# Try the .apply() function?
-S_list = data['spxclose'].values.tolist()
-K_list = data['strike'].values.tolist()
-T_list = data['ttm'].values.tolist()
-r_list = data['r'].values.tolist()
-q_list = data['q'].values.tolist()
-sigma = 0.2
-
-S = S_list[0]
-K = K_list[0]
-T = T_list[0]
-r = r_list[0]
-q = q_list[0]
-
-print(S)
-
-for i in S_list:
-    S_list.pop(0)
-    print(S)
+# Applying the model on every
+# row on the dataframe
+# --------------------------------------------------
+data['call'] = data.apply(lambda row: black_scholes_call_div(
+    row['spxclose'], row['strike'], row['ttm'], row['r'], row['q'], sigma), axis=1)
+data
