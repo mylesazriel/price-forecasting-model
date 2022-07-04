@@ -1,16 +1,18 @@
+# Importing libraries
+# --------------------------------------------------
 import pandas as pd
 import numpy as np
 
+# FBM Function using Davies Harte method
+# --------------------------------------------------
+
 
 def davies_harte(T, N, H):
-    '''
-    Generates sample paths of fractional Brownian Motion using the Davies Harte method
 
-    args:
-        T:      length of time (in years)
-        N:      number of time steps within timeframe
-        H:      Hurst parameter
-    '''
+    #  T: length of time (in years)
+    #  N: number of time steps within timeframe
+    #  H: Hurst parameter
+
     def gamma(k, H): return 0.5*(np.abs(k-1)**(2*H) -
                                  2*np.abs(k)**(2*H) + np.abs(k+1)**(2*H))
     g = [gamma(k, H) for k in range(0, N)]
@@ -50,4 +52,10 @@ def davies_harte(T, N, H):
     path = np.array([0] + list(fBm))
     return path
 
-# Reading data
+# Reading and prepping the data
+# --------------------------------------------------
+
+
+# Applying the model on every
+# row on the dataframe
+# --------------------------------------------------
